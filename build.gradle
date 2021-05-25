@@ -79,54 +79,66 @@ publish.onlyIf { doUploadArchives }
 if(doUploadArchives) {
     publishing {
         repositories {
+            mavenLocal()
+//        mavenCentral()
             maven {
-               def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-               def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
-               url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-                credentials {
-                    username = "${sonatypeUsername}"
-                    password = "${sonatypePassword}"
+                def releasesRepoUrl = "http://mvnrepo.alibaba-inc.com/mvn/releases"
+                def releasesRepoUserName = "admin"
+                def releasesRepoPassword = "screct"
+
+                def snapshotsRepoUrl = "http://mvnrepo.alibaba-inc.com/mvn/snapshots"
+                def snapshotsUserName = "snapshotsAdmin"
+                def snapshotsPassword = "123456"
+                def username1 = version.endsWith('SNAPSHOT') ? snapshotsUserName : releasesRepoUserName
+                def passowrd1 = version.endsWith('SNAPSHOT') ? snapshotsPassword : releasesRepoPassword
+
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+                credentials{
+                    username = username1
+                    password = passowrd1
                 }
             }
+
         }
         publications {
-            flowless(MavenPublication) {
+            richTextFX(MavenPublication) {
                 from components.java
                 artifact sourcesJar
-                artifact javadocJar
+//            artifact javadocJar
                 pom {
-                    name = 'flowless'
+                    name = 'RichTextFX'
                     packaging = 'jar'
-                    description = 'Efficient VirtualFlow for JavaFX.'
-                    url = 'https://github.com/FXMisc/Flowless/#flowless'
-               
+                    description = 'Rich-text area for JavaFX'
+                    url = 'https://github.com/FXMisc/RichTextFX/#richtextfx'
+
                     scm {
-                        url = 'scm:git@github.com:FXMisc/flowless.git'
-                        connection = 'scm:git@github.com:FXMisc/Flowless.git'
-                        developerConnection = 'scm:git@github.com:FXMisc/Flowless.git'
+                        url = 'scm:git@github.com:FXMisc/RichTextFX.git'
+                        connection = 'scm:git@github.com:FXMisc/RichTextFX.git'
+                        developerConnection = 'scm:git@github.com:FXMisc/RichTextFX.git'
                     }
-               
+
                     licenses {
                         license {
                             name = 'The BSD 2-Clause License'
                             url = 'http://opensource.org/licenses/BSD-2-Clause'
                             distribution = 'repo'
                         }
+                        license {
+                            name = 'GPLv2 with the Classpath Exception'
+                            url = 'http://www.gnu.org/software/classpath/license.html'
+                            distribution = 'repo'
+                        }
                     }
-               
+
                     developers {
                         developer {
                             name = 'Tomas Mikula'
                         }
-                        developer {
-                            name = 'Jordan Martinez'
-                        }
-                   }
+                    }
                 }
             }
         }
     }
-    
     signing {
         sign publishing.publications.flowless
     }
