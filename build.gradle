@@ -2,12 +2,13 @@ version = '0.6.4-SNAPSHOT'
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
-apply plugin: 'osgi'
+//apply plugin: 'osgi'
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
 buildscript {
     repositories {
+        mavenCentral()
         jcenter()
     }
 }
@@ -76,7 +77,7 @@ artifacts {
 def doUploadArchives = project.hasProperty('sonatypeUsername') && project.hasProperty('sonatypePassword')
 publish.onlyIf { doUploadArchives }
 
-if(doUploadArchives) {
+if(true) {
     publishing {
         repositories {
             mavenLocal()
@@ -98,50 +99,25 @@ if(doUploadArchives) {
                     password = passowrd1
                 }
             }
-
         }
         publications {
-            richTextFX(MavenPublication) {
+            flowless(MavenPublication) {
                 from components.java
                 artifact sourcesJar
-//            artifact javadocJar
+//                artifact javadocJar
                 pom {
-                    name = 'RichTextFX'
+                    artifactId = 'flowless'
                     packaging = 'jar'
-                    description = 'Rich-text area for JavaFX'
-                    url = 'https://github.com/FXMisc/RichTextFX/#richtextfx'
-
-                    scm {
-                        url = 'scm:git@github.com:FXMisc/RichTextFX.git'
-                        connection = 'scm:git@github.com:FXMisc/RichTextFX.git'
-                        developerConnection = 'scm:git@github.com:FXMisc/RichTextFX.git'
-                    }
-
-                    licenses {
-                        license {
-                            name = 'The BSD 2-Clause License'
-                            url = 'http://opensource.org/licenses/BSD-2-Clause'
-                            distribution = 'repo'
-                        }
-                        license {
-                            name = 'GPLv2 with the Classpath Exception'
-                            url = 'http://www.gnu.org/software/classpath/license.html'
-                            distribution = 'repo'
-                        }
-                    }
-
-                    developers {
-                        developer {
-                            name = 'Tomas Mikula'
-                        }
-                    }
+                    description = 'Efficient VirtualFlow for JavaFX.'
                 }
             }
         }
+
     }
-    signing {
-        sign publishing.publications.flowless
-    }
+
+//    signing {
+//        sign publishing.publications.flowless
+//    }
 }
 
 assemble.dependsOn fatJar
